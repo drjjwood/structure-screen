@@ -66,6 +66,32 @@ def load_results():
 
     return df
 
+def get_binary_decision(df: pd.DataFrame) -> tuple[str, str]:
+    flag_hits = df[
+        (df["qtmscore"] >= 0.5)
+        & (df["qcov"] >= 0.5)
+        & (df["fident"] <= 0.30)
+        & (df["evalue"] <= 1e-3)
+    ]
+
+    if len(flag_hits) > 0:
+        return (
+            "FLAG",
+            f"{len(flag_hits)} hit(s) meet: TM-score ≥ 0.5, qcov ≥ 0.5, sequence identity ≤ 0.30.",
+        )
+
+    return (
+        "PASS",
+        "No hits meet the structure-similar / sequence-diverse threshold.",
+    )
+
+
+def show_binary_decision(decision: str, reason: str) -> None:
+    if decision == "FLAG":
+        st.error(f"🚩 **FLAG** — {reason}")
+    else:
+        st.success(f"✅ **PASS** — {reason}")
+
 def aligned_overlay_viewer(query_path: Path, aligned_target_path: Path):
     st.subheader("Aligned structural overlay")
 
@@ -163,15 +189,25 @@ df = load_results()
 st.title("Structure Similarity Dashboard")
 st.caption(f"Showing results for: `{selected_query_dir.name}`")
 
+decision, reason = get_binary_decision(df)
+
+st.markdown("## Structural Screening decision")
+show_binary_decision(decision, reason)
+
+structure_diverse = (
+    df["similarity_class"] == "structure_similar_sequence_diverse"
+).sum()
 high = (df["similarity_class"] == "high_similarity").sum()
 moderate = (df["similarity_class"] == "moderate_similarity").sum()
 weak = (df["similarity_class"] == "weak_similarity").sum()
+low = (df["similarity_class"] == "low_similarity").sum()
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 col1.metric("Total reported hits", len(df))
-col2.metric("High similarity", high)
-col3.metric("Moderate similarity", moderate)
-col4.metric("Weak similarity", weak)
+col2.metric("Structure-similar / sequence-diverse", structure_diverse)
+col3.metric("High similarity", high)
+col4.metric("Moderate similarity", moderate)
+col5.metric("Low / weak similarity", low + weak)
 
 st.markdown("## Hit overview")
 
