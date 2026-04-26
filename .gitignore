@@ -1,0 +1,81 @@
+# -----------------------
+# Python basics
+# -----------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+env/
+venv/
+.venv/
+foldseek_env/
+
+# -----------------------
+# Jupyter / notebooks
+# -----------------------
+.ipynb_checkpoints/
+
+# -----------------------
+# OS / editor junk
+# -----------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# -----------------------
+# Logs / temp
+# -----------------------
+*.log
+tmp/
+temp/
+.cache/
+
+# -----------------------
+# Pipeline outputs (IMPORTANT)
+# -----------------------
+outputs/
+
+# If you want to keep folder structure but not files:
+# outputs/*
+# !outputs/.gitkeep
+
+# -----------------------
+# Large / generated input data
+# -----------------------
+inputs/raw_pdbs/
+
+# Optional: if users will regenerate these
+# inputs/query_pdbs/
+# inputs/reference_structures/
+
+# -----------------------
+# ColabFold / model outputs
+# -----------------------
+colabfold/
+*.a3m
+*.pkl
+*.npz
+
+# -----------------------
+# Streamlit cache
+# -----------------------
+.streamlit/
+
+# -----------------------
+# Build / packaging
+# -----------------------
+dist/
+build/
+*.egg-info/
+
+# -----------------------
+# Misc
+# -----------------------
+*.bak
+*.tmp
